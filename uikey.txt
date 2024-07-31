@@ -1,0 +1,1183 @@
+//
+//SPRINGSETTINGS DO NOT TOUCH
+//  -----------------------------
+//
+//
+//  Quick Notes:
+//
+//  1. The built-in default bindings are always loaded. If you wish
+//     to override them, use the unbindall and unbind commands
+//     to delete them at the beginning of your 'uikeys.txt'.
+//
+//  2. More then one action can be bound to a specific keyset. The
+//     actions for any given keyset are tried in the order that they
+//     were bound. The first currently available command that matches
+//     an action is used.
+//
+//  3. As a slight modification to the above note, keysets that use
+//     the 'Any' modifier are tried after those that do not use it.
+//
+//  4. A keyset using the Shift modifier should be bound with its
+//     unshifted key  (ex: bind  "Shift+."  instead of  "Shift+>" )
+//
+//
+//  Commands that can be used in this file:
+//
+//    unbindall
+//    ---------
+//    - removes all bindings, and adds "bind enter chat"
+//      (one of the other unbind commands can get rid of that one)
+//    - good for deleting the default bindings
+//
+//    keysym <name> <keycode>
+//    -----------------------
+//    - add a custom key symbol  (the default key symbols can not be overriden)
+//    - name must start with a letter, and only contain letters, numbers, and '_'
+//    - the <keycode> can be a currently recognized keysym
+//      (ex:  "keysym menu 0x13F"  or  "keysym radar r")
+//
+//    keyset <name> <keyset>
+//    ----------------------
+//    - specifies a named keyset
+//    - name must start with a letter, and only contain letters, numbers, and '_'
+//    - named keysets may be accessed by prepending the '&' character to the name
+//      (ex:  "keyset myKeySet Ctrl+x"  then  "bind &myKeySet myAction" )
+//
+//    fakemeta <keysym>
+//    -----------------
+//    - assign an auxiliary key for the Meta modifier ("space" is a good choice)
+//    - use "fakemeta none" to disable this feature
+//
+//    bind <keyset> <action>
+//    ----------------------
+//    - appends the action to the keyset's list of actions
+//    - the action can be just a command, or a command with arguments
+//
+//    unbind <keyset> <action>
+//    ------------------------
+//    - removes the action from the keyset's list of actions
+//    - both the action and the keyset must match
+//
+//    unbindkeyset <keyset>
+//    ---------------------
+//    - removes all bindings that use the keyset
+//
+//    unbindaction <action>
+//    ---------------------
+//    - removes all bindings that use the action  (command that is, a misnomer)
+//
+//
+//  * NOTE: These commands can also be run from the chat line in-game using
+//          the slash command syntax  (/bind, /unbind, etc...)
+//
+//
+//  Keyset Format:
+//
+//    A keyset is a combination of keys, the main key and its modifiers.
+//
+//    Here are some examples:
+//
+//      bind            a  fake_action
+//      bind       Ctrl+a  fake_action
+//      bind          C+a  fake_action
+//      bind Ctrl+Shift+a  fake_action
+//      bind          *+a  fake_action
+//      bind   &my_keyset  fake_action
+//
+//    The format then goes like this:
+//
+//      [<Modifier>+]...[<Modifier>+]<keysym>
+//
+//        or
+//
+//      &<keyset_name>    (for named keysets)
+//
+//    The modifiers (and their abbreviations), are:
+//
+//      Any   (*)
+//      Alt   (A)
+//      Ctrl  (C)
+//      Meta  (M)
+//      Shift (S)
+//
+//    The special 'Any' modifier makes it so that the keyset matches
+//    regardless of the current state of the real modifiers.
+//
+//    The known keysyms (key symbols), are listed at the end of this file.
+//    If you want to use a key that is unknown to Spring, then you may use
+//    the hexadecimal notation. Here are two equivalent bindings:
+//
+//      bind Ctrl+0x20  firestate 0  // hold fire
+//      bind Ctrl+space firestate 0  // hold fire
+//
+//
+//  Extra Run-Time Commands
+//
+//    /keyload   : loads the uikeys.txt bindings  (does not clear current bindings)
+//    /keyreload : loads the uikeys.txt bindings  (clears current bindings first)
+//    /keysave   : save current bindings to 'uikeys.tmp'  (NOTE: 'tmp' vs. 'txt')
+//    /keysyms   : prints the known keysyms to standard out
+//    /keycodes  : prints the known keycodes to standard out
+//    /keyprint  : prints the current bindings to standard out
+//    /keydebug  : prints debugging information to standard out (for each keystroke)
+//
+//
+//  Hotbinding:
+//
+//    The default bindings include the 'hotbind' (Ctrl+insert) and
+//    'hotunbind' (Ctrl+delete) capabilities. Place the mouse cursor over one
+//    of the control panel icons (normal command or build command), and press
+//    Ctrl+insert. Spring will then ask for a keyset, which will then have the
+//    icon's command immediately appended to its list of actions. Placing the
+//    mouse cursor over an icon and hitting Ctrl+delete will delete all bindings
+//    associated with that icon's command.
+//
+//
+//  Default Bindings:
+//
+//
+//  Key Symbol    Key Code
+//  ----------    --------
+//
+//  !             0x021
+//  "             0x022
+//  #             0x023
+//  $             0x024
+//  %             0x025
+//  &             0x026
+//  '             0x027
+//  (             0x028
+//  )             0x029
+//  *             0x02A
+//  +             0x02B
+//  ,             0x02C
+//  -             0x02D
+//  .             0x02E
+//  /             0x02F
+//  0             0x030
+//  1             0x031
+//  2             0x032
+//  3             0x033
+//  4             0x034
+//  5             0x035
+//  6             0x036
+//  7             0x037
+//  8             0x038
+//  9             0x039
+//  :             0x03A
+//  ;             0x03B
+//  <             0x03C
+//  =             0x03D
+//  >             0x03E
+//  ?             0x03F
+//  @             0x040
+//  [             0x05B
+//  \             0x05C
+//  ]             0x05D
+//  ^             0x05E
+//  _             0x05F
+//  `             0x060
+//  a             0x061
+//  alt           0x134
+//  b             0x062
+//  backspace     0x008
+//  c             0x063
+//  clear         0x00C
+//  ctrl          0x132
+//  d             0x064
+//  delete        0x07F
+//  down          0x112
+//  e             0x065
+//  end           0x117
+//  enter         0x00D
+//  esc           0x01B
+//  escape        0x01B
+//  f             0x066
+//  f1            0x11A
+//  f10           0x123
+//  f11           0x124
+//  f12           0x125
+//  f13           0x126
+//  f14           0x127
+//  f15           0x128
+//  f2            0x11B
+//  f3            0x11C
+//  f4            0x11D
+//  f5            0x11E
+//  f6            0x11F
+//  f7            0x120
+//  f8            0x121
+//  f9            0x122
+//  g             0x067
+//  h             0x068
+//  home          0x116
+//  i             0x069
+//  insert        0x115
+//  j             0x06A
+//  joy0          0x12C
+//  joy1          0x12D
+//  joy2          0x12E
+//  joy3          0x12F
+//  joy4          0x130
+//  joy5          0x131
+//  joy6          0x132
+//  joy7          0x133
+//  joydown       0x141
+//  joyleft       0x142
+//  joyright      0x143
+//  joyup         0x140
+//  joyw          0x193
+//  joyx          0x190
+//  joyy          0x191
+//  joyz          0x192
+//  k             0x06B
+//  l             0x06C
+//  left          0x114
+//  m             0x06D
+//  meta          0x136
+//  n             0x06E
+//  numpad*       0x10C
+//  numpad+       0x10E
+//  numpad-       0x10D
+//  numpad.       0x10A
+//  numpad/       0x10B
+//  numpad0       0x100
+//  numpad1       0x101
+//  numpad2       0x102
+//  numpad3       0x103
+//  numpad4       0x104
+//  numpad5       0x105
+//  numpad6       0x106
+//  numpad7       0x107
+//  numpad8       0x108
+//  numpad9       0x109
+//  numpad=       0x110
+//  numpad_enter  0x10F
+//  o             0x06F
+//  p             0x070
+//  pagedown      0x119
+//  pageup        0x118
+//  pause         0x013
+//  printscreen   0x13C
+//  q             0x071
+//  r             0x072
+//  return        0x00D
+//  right         0x113
+//  s             0x073
+//  shift         0x130
+//  space         0x020
+//  t             0x074
+//  tab           0x009
+//  u             0x075
+//  up            0x111
+//  v             0x076
+//  w             0x077
+//  x             0x078
+//  y             0x079
+//  z             0x07A
+//  {             0x07B
+//  |             0x07C
+//  }             0x07D
+//  ~             0x07E
+
+
+//g502 keysim
+//central back = numpad.
+//single left = numpad_enter
+// left forward up = numpad*
+// left back up = numpad/
+// left forward down = numpad+
+// left back down = numpad-
+//
+
+//SPRINGSETTINGS DO NOT TOUCH
+
+/////////////DELETE ALL PREBUILDED KEYS
+unbindall
+//////////////DELETE ALL PREBUILDED KEYS
+
+//tasti obbligati
+//seleziona capo 			Ctrl+c
+//seleziona tutto			Ctrl+a
+//seleziona unità stesso tipo		Ctrl+z
+//menu gioco				f11
+//prende screenshot			f12
+
+
+//ADD MORE KEY FOR ITALIAN LAYOUT
+//creatasto ì
+keysym 		iacc 	0x0EC
+
+//creatasto ù
+keysym 		uacc 	0xf9
+
+//creatasto è
+keysym 		eacc 	0x0E8
+
+//creatasto à
+keysym 		aacc	0x0E0
+
+//creatasto ò
+keysym 		oacc   	0x0F2
+
+//creatasto stamp
+keysym 		stamp 	0x13C
+
+//creatasto menù
+keysym 		men 	sc_0x065
+
+//creatasto start
+keysym 		start 	sc_0x136
+
+
+//creatasto altgr
+//keysym 		altgr 	0x139
+
+//creatasto lockmaiusc
+keysym 		ShiftLock sc_0x039
+
+
+
+
+
+
+//EXPERIMENTAL KEYS
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
+
+
+//***************************************************************************************************
+
+
+//SELECT ALL
+bind		Ctrl+a  		select AllMap++_SelectAll+
+
+//META
+bind space fakemeta
+//bind          Any+space  commandinsert prepend_between // prepend command into the queue between 2 commands close to cursor
+bind          Any+space  commandinsert prepend_queue // prepend command into a separate prepend queue until key released
+
+//OVERVIEW
+bind ShiftLock	custom_overview
+
+//BATTLE
+bind		a  			fight
+bind		Any+a  		fight
+
+bind		a  			patrol
+bind		Any+a  		patrol
+
+bind		a  			attack
+bind		Any+a  		attack
+
+bind		a          	areaattack
+bind        Any+a     	areaattack
+
+//ECO
+bind		s  			reclaim
+bind		Any+s  		reclaim
+
+bind		s  			repair
+bind		Any+s  		repair
+
+bind		s			resurrect
+bind		Any+s		resurrect
+
+bind		s			restore
+bind		Any+s		restore
+
+bind		s			capture
+bind		Any+s		capture
+
+
+bind		w	    wait 0
+bind		Shift+w  		wait queued
+bind		Ctrl+w			select Visible+_Waiting+_ClearSelection_SelectAll+
+
+bind		q			manualfire
+bind		Shift+q  		manualfire
+
+bind		q		    manuallaunch
+bind		Shift+q  		manuallaunch
+
+bind		Alt+q		selfd
+bind		Ctrl+Alt+q selfd queued
+
+
+
+//TYPES SELECTION ALL or 50%
+bind	Any+numpad+			select AllMap+_Not_Aircraft_Not_Building_Not_NameContain_Commander_InPrevSel_Not_InHotkeyGroup+_SelectAll 
+bind	numpad+	select AllMap+_Not_Building_Not_NameContain_Commander_InPrevSel_Not_InHotkeyGroup+_ClearSelection_SelectPart_50 
+
+//HEALTH
+bind		numpad-	select Visible+_Not_Builder_Not_Building_Not_NameContain_Commander_Not_Transport_Weapons_Not_RelativeHealth_59+_ClearSelection_SelectAll+
+bind		Any+numpad-	select Visible+_Not_Builder_Not_Building_Not_NameContain_Commander_Not_Transport_Weapons_RelativeHealth_60+_ClearSelection_SelectAll+
+
+bind 		Any+x		canceltarget
+bind 		x			settarget
+
+
+//COMMANDER
+bind		tab,tab		select AllMap+_Builder_ManualFireUnit_Not_IdMatches_cordecom_Not_IdMatches_armdecom+_ClearSelection_SelectOne+
+bind		tab		select AllMap+_Builder_ManualFireUnit_Not_IdMatches_cordecom_Not_IdMatches_armdecom+_ClearSelection_SelectNum_1+
+bind		 Any+tab		select AllMap+_Builder_ManualFireUnit_Not_IdMatches_cordecom_Not_IdMatches_armdecom+_ClearSelection_SelectOne+
+
+//BUILDERS
+bind	\,\,\			select AllMap+_Not_Weapons_Builder_Not_Building_Buildoptions+_SelectAll+
+bind	\,\				select Visible+_Not_Weapons_Builder_Not_Building_Buildoptions+_ClearSelection_SelectOne+	
+bind	\				select AllMap+_Idle_Not_Weapons_Builder_Not_Building_Buildoptions+_ClearSelection_SelectOne+	
+bind	Ctrl+\			select Visible+_Idle_Not_Weapons_Builder_Not_Building_Buildoptions+_SelectAll+
+
+
+//REZ
+bind		esc,esc	 		select AllMap+_Resurrect_Idle_Not_Weapons+_SelectOne+
+bind		esc	 			select AllMap+_Resurrect_Not_Weapons+_ClearSelection_SelectAll+
+bind		Ctrl+esc		select AllMap+_Resurrect_Idle_Not_Weapons+_SelectNum_1+
+bind		Alt+esc			select AllMap+_Resurrect_Idle_Not_Weapons+_ClearSelection_SelectAll+
+
+//COMBAT ENGINERS
+//bind				select //AllMap+_Idle_Builder_Not_Building_Not_NameContain_Construction_Not_Weapons_Not_NameContain_Commander_Not_NameContain_Necro_Not_NameContain_Rector+_SelectAll+
+
+
+//MINERS
+bind	z	select Visible+_IdMatches_armmlv_IdMatches_cormlv_IdMatches_armdecom_IdMatches_cordecom_IdMatches_cormando+_SelectAll+
+
+//LABS
+bind		sc_meta		select AllMap+_Building_Builder+_ClearSelection_SelectNum_1+
+bind		Any+sc_meta	select AllMap+_Idle_Building_Builder+_ClearSelection_SelectOne+
+
+
+//STATE 
+bind		f1,f1			repeat 1
+bind		f1				repeat 0
+
+bind		f2,f2     		wantcloak 1
+bind		f2      		wantcloak 0
+
+
+//bind		F8,F8,F8		movestate 0
+bind		F8,F8			movestate 1
+bind		F8				movestate 0
+
+//bind		f7,f7,f7		firestate 1
+bind		f7,f7			firestate 0
+bind		f7				firestate 2
+
+bind		numpad_enter		buildfacing inc
+bind		Any+numpad_enter	buildfacing inc
+bind 		numpad/				command_skip_current
+bind 		Any+numpad/			command_cancel_last
+bind 		numpad*				
+bind 		Any+numpad*
+
+bind 		<,<			drawlabel
+bind 		<			drawinmap
+
+//UNITS
+//scouts and fast units
+bind	1	select AllMap+_IdMatches_armflea_IdMatches_armfast_IdMatches_armmar_IdMatches_corshiva_IdMatches_armfav_IdMatches_corfav_IdMatches_armgremlin_IdMatches_armpt_IdMatches_corpt_IdMatches_armlship_IdMatches_corlship_Not_InHotkeyGroup+_ClearSelection_SelectAll 	
+
+//raiders and light units
+bind	2	select	AllMap+_IdMatches_armpw_IdMatches_corak_IdMatches_armflash_IdMatches_corgator_IdMatches_armlatnk_IdMatches_corsala_IdMatches_corkarg_IdMatches_armraz_IdMatches_armfido_IdMatches_corpyro_IdMatches_armsh_IdMatches_corsh_IdMatches_coresupp_Not_InHotkeyGroup+_ClearSelection_SelectAll
+
+//battle units
+bind	3	select AllMap+_IdMatches_armham_IdMatches_armzeus_IdMatches_corthud_IdMatches_corcan_IdMatches_armstump_IdMatches_armbull_IdMatches_coraid_IdMatches_correap_IdMatches_armpship_IdMatches_armbats_IdMatches_corpship_IdMatches_corbats_IdMatches_armanac_IdMatches_corsnap_IdMatches_armraz_IdMatches_corKarg_Not_InHotkeyGroup+_ClearSelection_SelectAll 
+
+//artillery
+bind 4 select AllMap+_IdMatches_armrock_IdMatches_armfboy_IdMatches_armvang_IdMatches_corstorm_IdMatches_cormort_IdMatches_corcat_IdMatches_armart_IdMatches_armmart_IdMatches_corwolv_IdMatches_cormart_IdMatches_armroy_IdMatches_armmship_IdMatches_corroy_IdMatches_cormship_IdMatches_armmh_IdMatches_cormh_IdMatches_armmerl_IdMatches_corvroc_IdMatches_cortrem_Not_InHotkeyGroup+_ClearSelection_SelectAll
+
+//special per labs units, units that do not have a counterpart
+bind 5 select AllMap+_IdMatches_armwar_IdMatches_armsnipe_IdMatches_corsumo_IdMatches_armjanus_IdMatches_armanni_IdMatches_corlevlr_IdMatches_corgol_IdMatches_armepoch_IdMatches_corblackhy_IdMatches_corhal_IdMatches_armbanth_IdMatches_corkorg_Not_InHotkeyGroup+_ClearSelection_SelectAll
+
+//antiair units
+bind 6 select AllMap+_IdMatches_armjeth_IdMatches_armaak_IdMatches_corcrash_IdMatches_coraak_IdMatches_armsam_IdMatches_armyork_IdMatches_cormist_IdMatches_corsent_IdMatches_armpt_IdMatches_armaas_IdMatches_corpt_IdMatches_corarch_IdMatches_armah_IdMatches_corah_IdMatches_corjugg_Not_InHotkeyGroup+_ClearSelection_SelectAll
+
+//amphibious units
+bind 7 select AllMap+_IdMatches_armpincer_IdMatches_corgarp_IdMatches_armcroc_IdMatches_corparrow_IdMatches_armamph_IdMatches_coramph_IdMatches_armlun_IdMatches_corsok_IdMatches_armsub_IdMatches_armsubk_IdMatches_armserp_IdMatches_corsub_IdMatches_corshrk_IdMatches_corssub_Not_InHotkeyGroup+_ClearSelection_SelectAll
+
+//spiders and all terrain that are not already binded
+bind t select AllMap+_IdMatches_armsptk_IdMatches_armspid_IdMatches_cortermite_Not_InHotkeyGroup+_ClearSelection_SelectAll
+
+//radar and antiradar
+bind g select AllMap+_IdMatches_armaser_IdMatches_armmark_IdMatches_corspec_IdMatches_corvoyr_IdMatches_armseer_IdMatches_armjam_IdMatches_corvrad_IdMatches_coreter_IdMatches_armsehak_IdMatches_armawak_IdMatches_corhunt_IdMatches_corawak_IdMatches_armantship_IdMatches_corantiship_Not_InHotkeyGroup+_ClearSelection_SelectAll
+
+//spybots 
+bind b select AllMap+_IdMatches_armspy_IdMatches_corspy_IdMatches_cormando_IdMatches_armdecom_IdMatches_cordecom_Not_InHotkeyGroup+_ClearSelection_SelectAll 
+ 
+//AIRCRAFT
+//airscouts
+bind	y		AllMap+_IdMatches_armpeep_IdMatches_corfink_IdMatches_armawac_IdMatches_corawak_IdMatches_corhunt_IdMatches_armsehak+_CearSelection_SelectAll+
+
+//airfighter
+bind	h	AllMap+_IdMatches_armfig_IdMatches_armhawk_IdMatches_armsfig_IdMatches_corveng_IdMatches_corsfig_IdMatches_corvamp+_ClearSelection_SelectAll+
+
+//airgunships
+bind	n	AllMap+_IdMatches_armkam_IdMatches_armseap_IdMatches_armbrawl_IdMatches_armblade_IdMatches_armsabre_IdMatches_corbw_IdMtches_corcut_IdMatches_corseap_IdMatches_corape_IdMatches_corcrwh+_ClearSelection_SelectAll+
+
+//airbombers
+bind	8	AllMap+_IdMatches_armthund_IdMatches_sorshad_IdMatches_corsb_IdMatches_armsb_IdMatches_armpnix_IdMatches_corhurc_IdMatches_cortitan_IdMatches_armliche_IdMatches_armstil+_ClearSelection_SelectAll+
+
+//airtransport
+AllMap+_IdMatches_armatlas_IdMatches_corvalk_IdMatches_corseah_IdMatches_armdfly+_ClearSelection_SelectAll+
+AllMap+_ClearSelection_SelectAll+
+
+
+//TRANSPORTS
+bind		numpad.				select Visible+_Transport+_ClearSelection_SelectAll+
+bind     	Any+numpad.			unloadunits
+bind      	numpad.				loadunits
+
+//CHAT
+//bind			 		chat
+bind		Alt+enter  		chatally
+bind		Alt+enter  		chatswitchally
+bind		Ctrl+enter 		chatall
+bind		Ctrl+enter  		chatswitchall
+bind		Shift+enter  		chatspec
+bind		Shift+enter  		chatswitchspec
+bind		Any+enter  		edit_return
+bind		Any+escape 		edit_escape
+bind		Any+tab  		edit_complete
+bind		Any+backspace  		edit_backspace
+bind		Any+delete  		edit_delete
+bind		Alt+left  		edit_home
+bind		Any+home  		edit_home
+bind		Alt+right  		edit_end
+bind		Any+end  		edit_end
+bind		Any+left  		edit_prev_char
+bind		Any+right  		edit_next_char
+bind		Ctrl+left  		edit_prev_word
+bind		Ctrl+right  		edit_next_word
+bind		Any+up  		edit_prev_line
+bind		Any+down  		edit_next_line
+
+
+//GRUPPI
+//bind Alt+t add_to_autogroup 0
+//bind Alt+home add_to_autogroup 1
+//bind Alt+f2 add_to_autogroup 2
+bind Alt+f3 add_to_autogroup 3
+bind Alt+f4 add_to_autogroup 4
+bind Alt+f5 add_to_autogroup 5
+//bind Alt+f6 add_to_autogroup 6
+//bind Alt+end add_to_autogroup 7
+//bind Alt+g add_to_autogroup 8
+//bind Alt+b add_to_autogroup 9
+
+
+//bind Ctrl+Shift+Alt+t remove_from_autogroup 0
+//bind Ctrl+Shift+Alt+home remove_from_autogroup 1
+//bind Ctrl+Shift+Alt+f2 remove_from_autogroup 2
+bind Ctrl+Shift+Alt+f3 remove_from_autogroup 3
+bind Ctrl+Shift+Alt+f4 remove_from_autogroup 4
+bind Ctrl+Shift+Alt+f5 remove_from_autogroup 5
+//bind Ctrl+Shift+Alt+f6 remove_from_autogroup 6
+//bind Ctrl+Shift+Alt+end remove_from_autogroup 7
+//bind Ctrl+Shift+Alt+g remove_from_autogroup 8
+//bind Ctrl+Shift+Alt+b remove_from_autogroup 9
+
+//bind t group 0
+//bind home group 1
+//bind f2 group 2
+bind f3 group 3
+bind f4 group 4
+bind f5 group 5
+//bind f6 group 6
+//bind end group 7
+//bind g group 8
+//bind b group 9
+
+//bind t group focus 0
+//bind home group focus 1
+//bind f2 group focus 2
+bind f3 group focus 3
+bind f4 group focus 4
+bind f5 group focus 5
+//bind f6 group focus 6
+//bind end group focus 7
+//bind g group focus 8
+//bind b group focus 9
+
+//bind Ctrl+t group set 0
+//bind Ctrl+home group set 1
+//bind Ctrl+f2 group set 2
+bind Ctrl+f3 group set 3
+bind Ctrl+f4 group set 4
+bind Ctrl+f5 group set 5
+//bind Ctrl+f6 group set 6
+//bind Ctrl+end group set 7
+//bind Ctrl+g group set 8
+//bind Ctrl+b group set 9
+
+//bind Shift+t group selectadd 0
+//bind Shift+home group selectadd 1
+//bind Shift+f2 group selectadd 2
+bind Shift+f3 group selectadd 3
+bind Shift+f4 group selectadd 4
+bind Shift+f5 group selectadd 5
+//bind Shift+f6 group selectadd 6
+//bind Shift+end group selectadd 7
+//bind Shift+g group selectadd 8
+//bind Shift+b group selectadd 9
+
+//bind Ctrl+Shift+t group add 0
+//bind Ctrl+Shift+home group add 1
+//bind Ctrl+Shift+f2 group add 2
+bind Ctrl+Shift+f3 group add 3
+bind Ctrl+Shift+f4 group add 4
+bind Ctrl+Shift+f5 group add 5
+//bind Ctrl+Shift+f6 group add 6
+//bind Ctrl+Shift+end group add 7
+//bind Ctrl+Shift+g group add 8
+//bind Ctrl+Shift+b group add 9
+
+//bind Ctrl+Alt+t group selecttoggle 0
+//bind Ctrl+Alt+home group selecttoggle 1
+//bind Ctrl+Alt+f2 group selecttoggle 2
+bind Ctrl+Alt+f3 group selecttoggle 3
+bind Ctrl+Alt+f4 group selecttoggle 4
+bind Ctrl+Alt+f5 group selecttoggle 5
+//bind Ctrl+Alt+f6 group selecttoggle 6
+//bind Ctrl+Alt+end group selecttoggle 7
+//bind Ctrl+Alt+g group selecttoggle 8
+//bind Ctrl+Alt+b group selecttoggle 9
+
+//SELECT COSTRUZIONI DAL MENU COSTRUTTORI
+//energia
+bind		e			buildunit_armsolar
+bind		e			buildunit_armwin
+bind		e			buildunit_armadvsol
+bind		e			buildunit_armestor
+bind		e			buildunit_armgeo
+bind		e			buildunit_armfus
+bind		e			buildunit_armafus
+bind		e			buildunit_armuwadves
+bind		e			buildunit_amgeo
+bind		e			buildunit_armgmm
+bind		e			buildunit_armtide
+bind		e			buildunit_armuwes
+bind		e			buildunit_armuwfus
+bind		e			buildunit_armuwadves
+
+bind		e			buildunit_corsolar
+bind		e			buildunit_corwin
+bind		e			buildunit_coradvsol
+bind		e			buildunit_corestor
+bind		e			buildunit_corgeo
+bind		e			buildunit_corfus
+bind		e			buildunit_corafus
+bind		e			buildunit_coruwadves
+bind		e			buildunit_cmgeo
+bind		e			buildunit_corbhmth
+bind		e			buildunit_cortide
+bind		e			buildunit_coruwes
+bind		e			buildunit_coruwfus
+bind		e			buildunit_coruwadves
+
+//metallo
+bind		d			buildunit_armmex
+bind		d			buildunit_armamex
+bind		d			buildunit_armmakr
+bind		d			buildunit_armmstor
+bind		d			buildunit_armmoho
+bind		d			buildunit_armmmkr
+bind		d			buildunit_armuwadvms
+bind		d			buildunit_armuwmex
+bind		d			buildunit_armfmkr
+bind		d			buildunit_armuwms
+bind		d			buildunit_armuwmme
+bind		d			buildunit_armuwmmm
+bind		d			buildunit_armuwadvms
+    
+
+bind		d			buildunit_cormex
+bind		d			buildunit_corexp
+bind		d			buildunit_cormakr
+bind		d			buildunit_cormstor
+bind		d			buildunit_cormoho
+bind		d			buildunit_cormexp
+bind		d			buildunit_cormmkr
+bind		d			buildunit_coruwadvms
+bind		d			buildunit_coruwmex
+bind		d			buildunit_corfmkr
+bind		d			buildunit_coruwms
+bind		d			buildunit_coruwmme
+bind		d			buildunit_cormuwmmm
+bind		d			buildunit_coruwadvms
+bind		d			areamex
+
+//fabbriche
+
+bind		c			buildunit_armshltx
+bind		c			buildunit_armalab
+bind		c			buildunit_armavp
+bind		c			buildunit_armaap
+bind		c			buildunit_armasy
+bind		c			buildunit_asubpen
+bind		c			buildunit_armplat
+bind		c			buildunit_armlab
+bind		c			buildunit_armvp
+bind		c			buildunit_armap
+bind		c			buildunit_armsy
+bind		c			buildunit_armhp
+bind		c			buildunit_armfhp
+bind		c			buildunit_armasp
+
+
+bind		c			buildunit_corgant
+bind		c			buildunit_coralab
+bind		c			buildunit_coravp
+bind		c			buildunit_coraap
+bind		c			buildunit_corasy
+bind		c			buildunit_csubpen
+bind		c			buildunit_corplat
+bind		c			buildunit_corlab
+bind		c			buildunit_corvp
+bind		c			buildunit_corap
+bind		c			buildunit_corsy
+bind		c			buildunit_corhp
+bind		c			buildunit_corfhp
+bind		c			buildunit_corasp
+
+
+//nano radar
+bind		r			buildunit_armnanotc
+bind		r			buildunit_armnanotcplat
+bind		r			buildunit_armrad
+bind		r			buildunit_armjamt
+bind		r			buildunit_armeyes
+bind		r			buildunit_armarad
+bind		r			buildunit_armveil
+bind		r			buildunit_armsd
+bind		r			buildunit_armtarg
+bind		r			buildunit_armfrad
+bind		r			buildunit_armsonar
+bind		r			buildunit_armason
+
+bind		r			buildunit_cornanotc
+bind		r			buildunit_cornanotcplat
+bind		r			buildunit_corrad
+bind		r			buildunit_corjamt
+bind		r			buildunit_coreyes
+bind		r			buildunit_corarad
+bind		r			buildunit_corshroud
+bind		r			buildunit_corsd
+bind		r			buildunit_cortarg
+bind		r			buildunit_corfrad
+bind		r			buildunit_corsonar
+bind		r			buildunit_corason
+
+
+//torri terra 1°
+bind		f			buildunit_armllt
+bind		f			buildunit_armclaw
+bind		f			buildunit_armbeamer
+bind		f			buildunit_armhlt
+bind		f			buildunit_armguard
+bind		f			buildunit_armdl
+
+//2°
+bind		f			buildunit_armpb
+bind		f			buildunit_armamb
+bind		f			buildunit_armanni
+bind		f			buildunit_armbrtha
+bind		f			buildunit_armvulc
+bind		f			buildunit_armsilo
+bind		f			buildunit_armemp
+
+//h2o
+bind		f			buildunit_armtl
+bind		f			buildunit_armfhlt
+bind		f			buildunit_armatl
+bind		f			buildunit_armfrock
+bind		f			buildunit_armkraken
+
+
+//torri terra 1°
+bind		f			buildunit_corllt
+bind		f			buildunit_cormaw
+bind		f			buildunit_hllt
+bind		f			buildunit_corhlt
+bind		f			buildunit_corpun
+bind		f			buildunit_cordl
+
+//2°
+bind		f			buildunit_corvipe
+bind		f			buildunit_cortoast
+bind		f			buildunit_cordoom
+bind		f			buildunit_corint
+bind		f			buildunit_corbuzz
+bind		f			buildunit_coratl
+bind		f			buildunit_corsilo
+bind		f			buildunit_cortron
+    
+//h2o
+bind		f			buildunit_cortl
+bind		f			buildunit_corfhlt
+bind		f			buildunit_coratl
+bind		f			buildunit_corgplat
+bind		f			buildunit_corfdoom
+
+
+    
+
+
+//antiair
+bind		v			buildunit_armrl
+bind		v			buildunit_packo
+bind		v			buildunit_armcir
+bind		v			buildunit_armflak
+bind		v			buildunit_mercury
+bind		v			buildunit_armamd
+    
+bind		v			buildunit_armfrt
+bind		v			buildunit_armfflak
+    
+
+bind		v			buildunit_corrl
+bind		v			buildunit_corfrt
+bind		v			buildunit_madsam
+bind		v			buildunit_corerad
+bind		v			buildunit_corflak
+bind		v			buildunit_screamer
+bind		v			buildunit_corfrock
+bind		v			buildunit_corenaa
+
+//SELECT COSTRUZIONI DAL MENU COSTRUTTORI
+//energia
+bind		Any+e			buildunit_armsolar
+bind		Any+e			buildunit_armwin
+bind		Any+e			buildunit_armadvsol
+bind		Any+e			buildunit_armestor
+bind		Any+e			buildunit_armgeo
+bind		Any+e			buildunit_armfus
+bind		Any+e			buildunit_armafus
+bind		Any+e			buildunit_armuwadves
+bind		Any+e			buildunit_amgeo
+bind		Any+e			buildunit_armgmm
+bind		Any+e			buildunit_armtide
+bind		Any+e			buildunit_armuwes
+bind		Any+e			buildunit_armuwfus
+bind		Any+e			buildunit_armuwadves
+
+bind		Any+e			buildunit_corsolar
+bind		Any+e			buildunit_corwin
+bind		Any+e			buildunit_coradvsol
+bind		Any+e			buildunit_corestor
+bind		Any+e			buildunit_corgeo
+bind		Any+e			buildunit_corfus
+bind		Any+e			buildunit_corafus
+bind		Any+e			buildunit_coruwadves
+bind		Any+e			buildunit_cmgeo
+bind		Any+e			buildunit_corbhmth
+bind		Any+e			buildunit_cortide
+bind		Any+e			buildunit_coruwes
+bind		Any+e			buildunit_coruwfus
+bind		Any+e			buildunit_coruwadves
+
+//metallo
+bind		Any+d			buildunit_armmex
+bind		Any+d			buildunit_armamex
+bind		Any+d			buildunit_armmakr
+bind		Any+d			buildunit_armmstor
+bind		Any+d			buildunit_armmoho
+bind		Any+d			buildunit_armmmkr
+bind		Any+d			buildunit_armuwadvms
+bind		Any+d			buildunit_armuwmex
+bind		Any+d			buildunit_armfmkr
+bind		Any+d			buildunit_armuwms
+bind		Any+d			buildunit_armuwmme
+bind		Any+d			buildunit_armuwmmm
+bind		Any+d			buildunit_armuwadvms
+   
+
+bind		Any+d			buildunit_cormex
+bind		Any+d			buildunit_corexp
+bind		Any+d			buildunit_cormakr
+bind		Any+d			buildunit_cormstor
+bind		Any+d			buildunit_cormoho
+bind		Any+d			buildunit_cormexp
+bind		Any+d			buildunit_cormmkr
+bind		Any+d			buildunit_coruwadvms
+bind		Any+d			buildunit_coruwmex
+bind		Any+d			buildunit_corfmkr
+bind		Any+d			buildunit_coruwms
+bind		Any+d			buildunit_coruwmme
+bind		Any+d			buildunit_cormuwmmm
+bind		Any+d			buildunit_coruwadvms
+bind		Any+d			areamex
+
+
+//fabbriche
+
+bind		Any+c			buildunit_armshltx
+bind		Any+c			buildunit_armalab
+bind		Any+c			buildunit_armavp
+bind		Any+c			buildunit_armaap
+bind		Any+c			buildunit_armasy
+bind		Any+c			buildunit_asubpen
+bind		Any+c			buildunit_armplat
+bind		Any+c			buildunit_armlab
+bind		Any+c			buildunit_armvp
+bind		Any+c			buildunit_armap
+bind		Any+c			buildunit_armsy
+bind		Any+c			buildunit_armhp
+bind		Any+c			buildunit_armfhp
+bind		Any+c			buildunit_armasp
+
+
+bind		Any+c			buildunit_corgant
+bind		Any+c			buildunit_coralab
+bind		Any+c			buildunit_coravp
+bind		Any+c			buildunit_coraap
+bind		Any+c			buildunit_corasy
+bind		Any+c			buildunit_csubpen
+bind		Any+c			buildunit_corplat
+bind		Any+c			buildunit_corlab
+bind		Any+c			buildunit_corvp
+bind		Any+c			buildunit_corap
+bind		Any+c			buildunit_corsy
+bind		Any+c			buildunit_corhp
+bind		Any+c			buildunit_corfhp
+bind		Any+c			buildunit_corasp
+
+
+//nano radar
+bind		Any+r			buildunit_armnanotc
+bind		Any+r			buildunit_armrad
+bind		Any+r			buildunit_armjamt
+bind		Any+r			buildunit_armeyes
+bind		Any+r			buildunit_armarad
+bind		Any+r			buildunit_armveil
+bind		Any+r			buildunit_armsd
+bind		Any+r			buildunit_armtarg
+bind		Any+r			buildunit_armfrad
+bind		Any+r			buildunit_armsonar
+bind		Any+r			buildunit_armason
+
+bind		Any+r			buildunit_cornanotc
+bind		Any+r			buildunit_corrad
+bind		Any+r			buildunit_corjamt
+bind		Any+r			buildunit_coreyes
+bind		Any+r			buildunit_corarad
+bind		Any+r			buildunit_corshroud
+bind		Any+r			buildunit_corsd
+bind		Any+r			buildunit_cortarg
+bind		Any+r			buildunit_corfrad
+bind		Any+r			buildunit_corsonar
+bind		Any+r			buildunit_corason
+
+
+//torri terra 1°
+bind		Any+f			buildunit_armllt
+bind		Any+f			buildunit_armclaw
+bind		Any+f			buildunit_armbeamer
+bind		Any+f			buildunit_armhlt
+bind		Any+f			buildunit_armguard
+bind		Any+f			buildunit_armdl
+
+//2°
+bind		Any+f			buildunit_armpb
+bind		Any+f			buildunit_armamb
+bind		Any+f			buildunit_armanni
+bind		Any+f			buildunit_armbrtha
+bind		Any+f			buildunit_armvulc
+bind		Any+f			buildunit_armsilo
+bind		Any+f			buildunit_armemp
+
+//h2o
+bind		Any+f			buildunit_armtl
+bind		Any+f			buildunit_armfhlt
+bind		Any+f			buildunit_armatl
+bind		Any+f			buildunit_armfrock
+bind		Any+f			buildunit_armkraken
+
+
+
+
+//torri terra 1°
+bind		Any+f			buildunit_corllt
+bind		Any+f			buildunit_cormaw
+bind		Any+f			buildunit_hllt
+bind		Any+f			buildunit_corhlt
+bind		Any+f			buildunit_corpun
+bind		Any+f			buildunit_cordl
+
+//2°
+bind		Any+f			buildunit_corvipe
+bind		Any+f			buildunit_cortoast
+bind		Any+f			buildunit_cordoom
+bind		Any+f			buildunit_corint
+bind		Any+f			buildunit_corbuzz
+bind		Any+f			buildunit_coratl
+bind		Any+f			buildunit_corsilo
+bind		Any+f			buildunit_cortron
+    
+//h2o
+bind		Any+f			buildunit_cortl
+bind		Any+f			buildunit_corfhlt
+bind		Any+f			buildunit_coratl
+bind		Any+f			buildunit_corgplat
+bind		Any+f			buildunit_corfdoom
+
+
+//antiair
+bind		Any+v			buildunit_armrl
+bind		Any+v			buildunit_packo
+bind		Any+v			buildunit_armcir
+bind		Any+v			buildunit_armflak
+bind		Any+v			buildunit_mercury
+bind		Any+v			buildunit_armamd
+bind		Any+v			buildunit_armfrt
+bind		Any+v			buildunit_armfflak
+    
+
+bind		Any+v			buildunit_corrl
+bind		Any+v			buildunit_corfrt
+bind		Any+v			buildunit_madsam
+bind		Any+v			buildunit_corerad
+bind		Any+v			buildunit_corflak
+bind		Any+v			buildunit_screamer
+bind		Any+v			buildunit_corfrock
+bind		Any+v			buildunit_corenaa
+
+//MINES
+bind 		z				buildunit_armdrag
+bind 		z				buildunit_armfdrag
+bind 		z				buildunit_armfort
+bind 		z				buildunit_armmine1
+bind 		z				buildunit_armmine2
+bind 		z				buildunit_armmine3
+bind 		z				buildunit_armfmine3
+bind 		z				buildunit_armgate
+bind 		z				buildunit_armjuno
+bind 		z				buildunit_cordrag
+bind 		z				buildunit_corfdrag
+bind 		z				buildunit_corfort
+bind 		z				buildunit_cormine1
+bind 		z				buildunit_cormine2
+bind 		z				buildunit_cormine3
+bind 		z				buildunit_corfmine3
+bind 		z				buildunit_corjuno
+bind 		z				buildunit_corgate
+
+bind 		Any+z				buildunit_armdrag
+bind 		Any+z				buildunit_armfdrag
+bind 		Any+z				buildunit_armfort
+bind 		Any+z				buildunit_armmine1
+bind 		Any+z				buildunit_armmine2
+bind 		Any+z				buildunit_armmine3
+bind 		Any+z				buildunit_armfmine3
+bind 		Any+z				buildunit_armgate
+bind 		Any+z				buildunit_armjuno
+bind 		Any+z				buildunit_cordrag
+bind 		Any+z				buildunit_corfdrag
+bind 		Any+z				buildunit_corfort
+bind 		Any+z				buildunit_cormine1
+bind 		Any+z				buildunit_cormine2
+bind 		Any+z				buildunit_cormine3
+bind 		Any+z				buildunit_corfmine3
+bind 		Any+z				buildunit_corjuno
+bind 		Any+z				buildunit_corgate
+
+//MAPS LAYERS
+bind 		numpad1			ShowMetalMap
+bind 		numpad2		    showElevation
+bind 		numpad3		    ShowPathTraversability
+bind		numpad4         gameinfo
+bind 		numpad5		    LastMsgPos
+bind 		numpad6 		moverotate
+bind 		numpad7			hideinterface
+bind		numpad8	 		sharedialog
+bind   		numpad9			togglecammode
+bind 		numpad0 		toggleradarandjammer
+
+bind 		Ctrl+Shift+numpad0	    NoSound
+bind 		Alt+Shift+numpad0		dynamicSky
+//bind		Shift+Meta+numpad0	    savegame
+//bind 		Meta+Ctrl+numpad0		createvideo
+bind 		f12		screenshot
+bind 		f10 options
+
+//MOVE
+bind		Any+up  		moveforward
+bind		Any+down  		moveback
+bind		Any+right 		moveright
+bind		Any+left  		moveleft
+//bind		Any+shift  		movefast
+//bind		Any+Shift  		moveslow
+
+
+//MIX INC/DEC	
+bind   	 	pageup  		moveup
+bind    	pagedown  		movedown
+bind    	Shift+pageup 	increaseViewRadius
+bind    	Shift+pagedown 	decreaseViewRadius
+bind		Ctrl+pageup		speedup
+bind		Ctrl+pagedown	slowdown
+
+//NANO
+//bind 				select AllMap+_Idle_NameContain_Nano+_SelectOne+
+//bind			    nextmenu
+//bind			    nextmenu
+
+//EXTRAS
+//bind 	    			showhealthbars
+//bind   	  			controlunit
+bind		end			quitmenu
+bind		any+end		quitforce
+bind		insert  	pause
+
+//CUSTOM INGAME LABELS
+bind 	p  		drawlabel_custom PUSH!
+bind	u		drawlabel_custom USE IT!
+//bind 	h 		drawlabel_custom HELP!
+bind 	k		drawlabel_custom CARE!
+
+
+bind	l		drawlabel_custom LEAVE!
+//bind 	n		drawlabel_custom NICE!
+bind 	. 		drawlabel_custom T2 CON PAID
+bind 	,	 	drawlabel_custom T2 ENGINEER PAID
+//bind 	r		drawlabel_custom RADAR
+bind 	+		drawlabel_custom RECLAIM or RECLAIM or REZ!
+
+
+//BUILD UNITS IN LABS make use of meta key, usually set on SPACE EXAMPLE
+//bind		Meta+tab	buildunit_armck +1 	//  	costruction kbot 1
+
+
+
+
+bind            blueprint_place
+bind            blueprint_create
+bind			blueprint_create_selectionorder
+bind            blueprint_delete
+bind            blueprint_prev
+bind            blueprint_next
+
+//DA SISTEMAR
+//bind 					DeathWait
+//bind 					SquadWait 10
+//bind 			 		timewait 60
+//bind 					gathermode
+//bind					gatherwait
+    
+
+//bind		  		specteam 1
+//bind		  		specteam 2
+//bind		  		specteam 3
+//bind		  		specteam 4
+bind	men	  		togglelos
+//bind				pastetext
+
+
+//moved to mouse 4-5 or so
+//bind			    buildspacing inc
+//bind			    buildspacing dec
+//bind		  		buildspacing inc
+//bind		  		buildspacing dec
+    
